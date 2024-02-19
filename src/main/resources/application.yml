@@ -10,7 +10,7 @@ spring:
 management:
   endpoints:
     web:
-      base-path: {REPLACE_IT}
+      base-path: /tooling
       exposure:
         include: "health,info"
 
@@ -18,6 +18,6 @@ management:
 server:
   error.whitelabel.enabled: false
   servlet:
-    context-path: {REPLACE_IT}
+    context-path: /albeniz
 
 
