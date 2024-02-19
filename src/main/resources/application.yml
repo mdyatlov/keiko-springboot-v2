@@ -1,0 +1,23 @@
+info:
+  version: 1.0.0
+
+## Properties for Spring itself
+spring:
+  application:
+    name: albeniz-api
+
+# Change Actuator base URI
+management:
+  endpoints:
+    web:
+      base-path: {REPLACE_IT}
+      exposure:
+        include: "health,info"
+
+## Change Server base context
+server:
+  error.whitelabel.enabled: false
+  servlet:
+    context-path: {REPLACE_IT}
+
+
