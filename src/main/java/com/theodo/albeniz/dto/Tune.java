@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 public class Tune {
+    private int id;
     private String title;
     private String author;
 }
