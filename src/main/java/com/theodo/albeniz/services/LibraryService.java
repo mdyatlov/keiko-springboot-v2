@@ -14,5 +14,9 @@ public interface LibraryService {
 
     UUID addTune(Tune tune);
 
-    void removeTune(UUID id);
+    boolean removeTune(UUID id);
+
+    boolean isExist(UUID id);
+
+    boolean modifyTune(Tune tune);
 }

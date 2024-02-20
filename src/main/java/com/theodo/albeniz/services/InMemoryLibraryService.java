@@ -44,7 +44,19 @@ public class InMemoryLibraryService implements LibraryService {
     }
 
     @Override
-    public void removeTune(UUID id) {
+    public boolean removeTune(UUID id) {
         // DO NOTHING in static memory version
+        return false;
+    }
+
+    @Override
+    public boolean isExist(UUID id) {
+        return LIBRARY.containsKey(id);
+    }
+
+    @Override
+    public boolean modifyTune(Tune tune) {
+        // DO NOTHING in static memory version
+        return false;
     }
 }
