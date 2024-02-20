@@ -1,34 +1,27 @@
 package com.theodo.albeniz.controller;
 
 import com.theodo.albeniz.dto.Tune;
+import com.theodo.albeniz.services.LibraryService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collection;
 
 @RestController
 @RequestMapping("library")
+@RequiredArgsConstructor
 public class LibraryController {
-    private final static Map<Integer, Tune> LIBRARY = new HashMap<>();
 
-    static {
-        // ADD static values (temporary)
-        LIBRARY.put(1, new Tune(1, "Thriller", "MJ"));
-        LIBRARY.put(2, new Tune(2, "Prelude and Fugue in C minor", "Bach"));
-        LIBRARY.put(3, new Tune(3, "The Little Foam Man", "Patrick S."));
-    }
+    private final LibraryService libraryService;
 
     @GetMapping("music")
     public Collection<Tune> getMusic(@RequestParam(name = "query", required = false) String query){
-        return LIBRARY.values().stream()
-                .sorted(Comparator.comparing(Tune::getId))
-                .filter(tune -> query == null || tune.getTitle().contains(query))
-                .collect(Collectors.toList());
+        return libraryService.getAll(query);
     }
 
     @GetMapping("music/{id}")
     public Tune getMusic(@PathVariable int id){
-        return LIBRARY.get(id);
+        return libraryService.getOne(id);
     }
 
 }
