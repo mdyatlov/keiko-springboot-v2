@@ -152,12 +152,20 @@ class InDatabaseLibraryControllerTest {
                                   }                                  
                                 ]
                                """
-                ));    }
+                ));
+    }
+
+    @Test
+    public void testDeleteTuneNotExist() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/library/music/" + UUID.randomUUID().toString()).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
 
     private UUID insertOneTune(@Language("json") final String tune) throws Exception {
         MvcResult mvcResult = mockMvc.perform(post("/library/music").contentType(MediaType.APPLICATION_JSON)
                         .content(tune))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn();
 
         String bodyAsString = mvcResult.getResponse().getContentAsString();
