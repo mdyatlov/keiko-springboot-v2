@@ -61,6 +61,17 @@ class InDatabaseLibraryControllerTest {
                 ));
     }
 
+    @Test
+    public void testAddTuneValidation() throws Exception {
+        mockMvc.perform(post("/library/music").contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                        {
+                                            "author": "Jackson5"
+                                        }
+                                        """))
+                .andExpect(status().isBadRequest());
+    }
+
     private void insertOneTune(@Language("json") final String tune) throws Exception {
         mockMvc.perform(post("/library/music").contentType(MediaType.APPLICATION_JSON)
                         .content(tune))

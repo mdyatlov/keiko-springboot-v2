@@ -2,6 +2,7 @@ package com.theodo.albeniz.controller;
 
 import com.theodo.albeniz.dto.Tune;
 import com.theodo.albeniz.services.LibraryService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +27,7 @@ public class LibraryController {
     }
 
     @PostMapping("music")
-    public Tune addTune(@RequestBody Tune tune){
+    public Tune addTune(@Valid  @RequestBody Tune tune){
         libraryService.addTune(tune);
         return libraryService.getOne(tune.getId());
     }
