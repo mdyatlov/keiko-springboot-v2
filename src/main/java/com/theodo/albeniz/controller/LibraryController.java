@@ -1,5 +1,6 @@
 package com.theodo.albeniz.controller;
 
+import com.theodo.albeniz.dto.Tune;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,7 +12,7 @@ import java.util.List;
 @RequestMapping("library")
 public class LibraryController {
     @GetMapping("music")
-    public Collection<String> getMusic(){
-        return List.of("Thriller", "Prelude and Fugue in C minor");
+    public Collection<Tune> getMusic(){
+        return List.of(new Tune("Thriller", "MJ"), new Tune("Prelude and Fugue in C minor", "Bach"));
     }
 }
