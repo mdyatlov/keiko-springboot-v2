@@ -11,6 +11,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -42,7 +44,7 @@ class LibraryControllerTest {
 
     @Test
     public void testGetOneTune() throws Exception {
-        mockMvc.perform(get("/library/music/2").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/library/music/f1c236cb-3ee5-47e8-9034-d3ebf85a6b76").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(
                         """
@@ -53,7 +55,7 @@ class LibraryControllerTest {
 
     @Test
     public void testGetOneTuneNotExisting() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/library/music/1000")
+        MvcResult mvcResult = mockMvc.perform(get("/library/music/" + UUID.randomUUID())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
         String contentAsString = mvcResult.getResponse().getContentAsString();

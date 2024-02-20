@@ -4,6 +4,7 @@ import com.theodo.albeniz.dto.Tune;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,12 +30,12 @@ class InMemoryLibraryServiceTest {
 
     @Test
     public void testGetOne(){
-        Tune tune = libraryService.getOne(1);
+        Tune tune = libraryService.getOne(UUID.fromString("ebc42f50-ea5e-4f4d-bf30-7755d382eb21"));
         assertEquals("Thriller", tune.getTitle());
     }
     @Test
     public void testGetOneNoMatch(){
-        Tune tune = libraryService.getOne(100);
+        Tune tune = libraryService.getOne(UUID.randomUUID());
         assertNull(tune);
     }
 }

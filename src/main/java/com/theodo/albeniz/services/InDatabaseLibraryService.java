@@ -10,23 +10,26 @@ import java.util.stream.Collectors;
 @Service
 @Profile("!memory")
 public class InDatabaseLibraryService implements LibraryService {
-    private final Map<Integer, Tune> library = new HashMap<>();
+    private final Map<UUID, Tune> library = new HashMap<>();
 
     @Override
     public Collection<Tune> getAll(String query) {
         return library.values().stream()
-                .sorted(Comparator.comparing(Tune::getId))
+                .sorted(Comparator.comparing(Tune::getTitle))
                 .filter(tune -> query == null || tune.getTitle().contains(query))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Tune getOne(int id) {
+    public Tune getOne(UUID id) {
         return library.get(id);
     }
 
     @Override
-    public void addTune(Tune tune) {
+    public UUID addTune(Tune tune) {
+        UUID uuid = UUID.randomUUID();
+        tune.setId(uuid);
         library.put(tune.getId(), tune);
+        return uuid;
     }
 }

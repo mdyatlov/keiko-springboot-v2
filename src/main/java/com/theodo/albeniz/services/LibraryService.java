@@ -4,12 +4,13 @@ import com.theodo.albeniz.dto.Tune;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.UUID;
 
 @Service
 public interface LibraryService {
     Collection<Tune> getAll(String query);
 
-    Tune getOne(int id);
+    Tune getOne(UUID id);
 
-    void addTune(Tune tune);
+    UUID addTune(Tune tune);
 }

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("library")
@@ -20,7 +21,7 @@ public class LibraryController {
     }
 
     @GetMapping("music/{id}")
-    public Tune getMusic(@PathVariable int id){
+    public Tune getMusic(@PathVariable UUID id){
         return libraryService.getOne(id);
     }
 

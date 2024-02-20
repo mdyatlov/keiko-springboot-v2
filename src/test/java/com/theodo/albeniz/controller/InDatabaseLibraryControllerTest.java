@@ -29,10 +29,8 @@ class InDatabaseLibraryControllerTest {
     public void testAddTune() throws Exception {
         checkThatThereIsNoTuneInLibrary();
 
-
         insertOneTune("""
                 {
-                    "id": 100,
                     "title": "ABC",
                     "author": "Jackson5"
                 }
@@ -40,7 +38,6 @@ class InDatabaseLibraryControllerTest {
 
         insertOneTune("""
         {
-            "id": 200,
             "title": "Highway to Hell",
             "author": "AC-DC"
         }
@@ -52,14 +49,12 @@ class InDatabaseLibraryControllerTest {
                         """
                                 [
                                   {
-                                    "id": 100,
                                     "title": "ABC",
                                     "author": "Jackson5"
                                   },
                                   {
-                                    "id": 200,
                                     "title": "Highway to Hell",
-                                       "author": "AC-DC"
+                                    "author": "AC-DC"
                                   }                                  
                                 ]
                                """
