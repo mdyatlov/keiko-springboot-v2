@@ -32,4 +32,9 @@ public class InDatabaseLibraryService implements LibraryService {
         library.put(tune.getId(), tune);
         return uuid;
     }
+
+    @Override
+    public void removeTune(UUID id) {
+        library.remove(id);
+    }
 }

@@ -26,6 +26,12 @@ public class LibraryController {
         return libraryService.getOne(id);
     }
 
+
+    @DeleteMapping("music/{id}")
+    public void deleteTune(@PathVariable UUID id){
+         libraryService.removeTune(id);
+    }
+
     @PostMapping("music")
     public Tune addTune(@Valid  @RequestBody Tune tune){
         libraryService.addTune(tune);

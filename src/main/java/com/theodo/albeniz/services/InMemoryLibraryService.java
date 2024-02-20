@@ -42,4 +42,9 @@ public class InMemoryLibraryService implements LibraryService {
         // DO NOTHING in static memory version
         return null;
     }
+
+    @Override
+    public void removeTune(UUID id) {
+        // DO NOTHING in static memory version
+    }
 }
