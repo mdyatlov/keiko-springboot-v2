@@ -24,4 +24,10 @@ public class LibraryController {
         return libraryService.getOne(id);
     }
 
+    @PostMapping("music")
+    public Tune addTune(@RequestBody Tune tune){
+        libraryService.addTune(tune);
+        return libraryService.getOne(tune.getId());
+    }
+
 }
