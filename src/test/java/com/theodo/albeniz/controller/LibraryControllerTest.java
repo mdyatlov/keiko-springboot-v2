@@ -1,13 +1,12 @@
 package com.theodo.albeniz.controller;
 
-import com.theodo.albeniz.services.InMemoryLibraryService;
+import com.theodo.albeniz.services.LibraryService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -18,8 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = LibraryController.class)
 @AutoConfigureMockMvc
-@ActiveProfiles("memory")
-@Import(value = {InMemoryLibraryService.class})
+@Import(value = {LibraryService.class})
 class LibraryControllerTest {
 
     @Autowired
