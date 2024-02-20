@@ -54,4 +54,17 @@ class LibraryControllerTest {
         String contentAsString = mvcResult.getResponse().getContentAsString();
         assertEquals("", contentAsString);
     }
+
+    @Test
+    public void findMusic() throws Exception {
+        mockMvc.perform(get("/library/music?query=iller")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json(
+                        """
+                                [
+                                    {'title':'Thriller','author':'MJ'}
+                                ]
+                                """));
+    }
 }

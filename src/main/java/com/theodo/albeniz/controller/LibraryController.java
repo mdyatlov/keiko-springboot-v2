@@ -1,12 +1,10 @@
 package com.theodo.albeniz.controller;
 
 import com.theodo.albeniz.dto.Tune;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("library")
@@ -21,8 +19,11 @@ public class LibraryController {
     }
 
     @GetMapping("music")
-    public Collection<Tune> getMusic(){
-        return LIBRARY.values().stream().sorted(Comparator.comparing(Tune::getId)).toList();
+    public Collection<Tune> getMusic(@RequestParam(name = "query", required = false) String query){
+        return LIBRARY.values().stream()
+                .sorted(Comparator.comparing(Tune::getId))
+                .filter(tune -> query == null || tune.getTitle().contains(query))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("music/{id}")
