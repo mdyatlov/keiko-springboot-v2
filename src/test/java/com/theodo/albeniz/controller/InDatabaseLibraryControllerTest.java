@@ -72,6 +72,18 @@ class InDatabaseLibraryControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    public void testComplexValidation() throws Exception {
+        mockMvc.perform(post("/library/music").contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                        {
+                                            "author": "Chantal G.",
+                                            "title": "Pandi Panda"
+                                        }
+                                        """))
+                .andExpect(status().isBadRequest());
+    }
+
     private void insertOneTune(@Language("json") final String tune) throws Exception {
         mockMvc.perform(post("/library/music").contentType(MediaType.APPLICATION_JSON)
                         .content(tune))
