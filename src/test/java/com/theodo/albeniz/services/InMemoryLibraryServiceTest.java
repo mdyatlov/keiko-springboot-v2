@@ -7,9 +7,9 @@ import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class LibraryServiceTest {
+class InMemoryLibraryServiceTest {
 
-    private final LibraryService libraryService = new LibraryService();
+    private final LibraryService libraryService = new InMemoryLibraryService();
 
     @Test
     public void testGetAllWithoutFilter(){
