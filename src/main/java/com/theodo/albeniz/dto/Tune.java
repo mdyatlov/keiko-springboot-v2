@@ -3,10 +3,7 @@ package com.theodo.albeniz.dto;
 import com.theodo.albeniz.validation.NotAChildrenSong;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -15,6 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @NotAChildrenSong
+@EqualsAndHashCode
 public class Tune {
     private UUID id;
 

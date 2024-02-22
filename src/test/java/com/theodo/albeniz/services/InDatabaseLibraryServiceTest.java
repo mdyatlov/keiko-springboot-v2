@@ -2,7 +2,12 @@ package com.theodo.albeniz.services;
 
 import com.theodo.albeniz.config.ApplicationConfig;
 import com.theodo.albeniz.dto.Tune;
+import com.theodo.albeniz.mappers.TuneMapper;
+import com.theodo.albeniz.mappers.TuneMapperImpl;
+import com.theodo.albeniz.repositories.TuneRepository;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -10,15 +15,22 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+@DataJpaTest
 class InDatabaseLibraryServiceTest {
-    private final InDatabaseLibraryService libraryService = new InDatabaseLibraryService(createMockConfiguration());
+
+    @Autowired
+    private TuneRepository tuneRepository;
+
+    private final TuneMapper tuneMapper = new TuneMapperImpl();
 
     @Test
     public void testAllMethods() {
+        InDatabaseLibraryService libraryService = new InDatabaseLibraryService(createMockConfiguration(), tuneRepository, tuneMapper);
         assertEquals(0, libraryService.getAll(null).size());
 
         UUID uuid1 = libraryService.addTune(new Tune(null, "Hello", "World Singers"));
@@ -34,6 +46,7 @@ class InDatabaseLibraryServiceTest {
 
     @Test
     public void testRemove() {
+        InDatabaseLibraryService libraryService = new InDatabaseLibraryService(createMockConfiguration(), tuneRepository, tuneMapper);
         assertEquals(0, libraryService.getAll(null).size());
 
         UUID uuid1 = libraryService.addTune(new Tune(null, "Hello", "World Singers"));
@@ -86,7 +99,7 @@ class InDatabaseLibraryServiceTest {
     }
 
     private InDatabaseLibraryService createLibraryWithManyTunes(ApplicationConfig applicationConfig) {
-        InDatabaseLibraryService dataLibraryService = new InDatabaseLibraryService(applicationConfig);
+        InDatabaseLibraryService dataLibraryService = new InDatabaseLibraryService(applicationConfig, tuneRepository, tuneMapper);
         for (int i = 0; i < 100; i++) {
             dataLibraryService.addTune(new Tune(UUID.randomUUID(), "Tune:" + i, "Me"));
         }

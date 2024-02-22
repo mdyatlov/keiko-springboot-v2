@@ -19,6 +19,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class LibraryController {
 
+
     private final LibraryService libraryService;
 
     @GetMapping("music")
@@ -58,8 +59,8 @@ public class LibraryController {
     @PostMapping("music")
     @ResponseStatus(HttpStatus.CREATED) // A third way to return an HTTP StatusCode
     public Tune addTune(@Valid  @RequestBody Tune tune) {
-        libraryService.addTune(tune);
-        return libraryService.getOne(tune.getId());
+        UUID uuid = libraryService.addTune(tune);
+        return libraryService.getOne(uuid);
     }
 
     @PutMapping("music")
