@@ -3,6 +3,8 @@ package com.theodo.albeniz.controller;
 import com.theodo.albeniz.dto.Tune;
 import com.theodo.albeniz.exceptions.NotFoundException;
 import com.theodo.albeniz.services.LibraryService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,17 @@ public class LibraryController {
     }
 
     @GetMapping("music/{id}")
+    @Operation(
+        summary = "Get the tune given its id",
+        description = "Request a tune given its UUID id. It may fail if the tune does not exist",
+        responses = {
+            @ApiResponse(responseCode = "200"),
+            @ApiResponse(responseCode = "400", description = "Incorrect input"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "Tune does not exist")
+        }
+    )
     public ResponseEntity<Tune> getMusic(@PathVariable UUID id){
         if(!libraryService.isExist(id)){
             //A first way to return an HTTP StatusCode
