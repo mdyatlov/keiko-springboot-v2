@@ -1,16 +1,16 @@
 package com.theodo.albeniz.controller;
 
-import com.theodo.albeniz.dto.Tune;
-import com.theodo.albeniz.services.LibraryService;
 import com.theodo.albeniz.services.messaging.MessagingService;
-import lombok.RequiredArgsConstructor;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Collection;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("message")
+
 public class MessagingController {
 
     private final MessagingService messagingService;
@@ -20,9 +20,8 @@ public class MessagingController {
     }
 
     @GetMapping()
+    @Hidden
     public void sendMessage(@RequestParam(name = "message", required = true) String query){
         messagingService.sendMessage(query);
     }
-
-
 }
