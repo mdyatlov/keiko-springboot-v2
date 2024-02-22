@@ -73,4 +73,11 @@ public class InDatabaseLibraryService implements LibraryService {
         }
         return false;
     }
+
+    @Override
+    public Collection<Tune> getAllFromAuthor(String author) {
+        List<TuneEntity> byAuthor = tuneRepository.findByAuthor(author);
+        return byAuthor.stream().map(tuneMapper::from).collect(Collectors.toList());
+    }
+
 }

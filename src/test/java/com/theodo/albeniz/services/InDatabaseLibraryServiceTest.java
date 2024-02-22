@@ -98,6 +98,19 @@ class InDatabaseLibraryServiceTest {
         return applicationConfig;
     }
 
+    @Test
+    public void testGetByAuthor() {
+        InDatabaseLibraryService libraryService = new InDatabaseLibraryService(createMockConfiguration(), tuneRepository, tuneMapper);
+        assertEquals(0, libraryService.getAll(null).size());
+
+        libraryService.addTune(new Tune(null, "Hello", "World Singers"));
+        libraryService.addTune(new Tune(null, "Hello !!!", "World Singers"));
+        libraryService.addTune(new Tune(null, "Hello !!!!!", "Jack"));
+
+        assertEquals(2, libraryService.getAllFromAuthor("World Singers").size());
+        assertEquals(1, libraryService.getAllFromAuthor("Jack").size());
+    }
+
     private InDatabaseLibraryService createLibraryWithManyTunes(ApplicationConfig applicationConfig) {
         InDatabaseLibraryService dataLibraryService = new InDatabaseLibraryService(applicationConfig, tuneRepository, tuneMapper);
         for (int i = 0; i < 100; i++) {

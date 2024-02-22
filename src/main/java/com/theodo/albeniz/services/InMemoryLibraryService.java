@@ -59,4 +59,9 @@ public class InMemoryLibraryService implements LibraryService {
         // DO NOTHING in static memory version
         return false;
     }
+
+    @Override
+    public Collection<Tune> getAllFromAuthor(String author) {
+        return Collections.emptyList(); // NOT IMPLEMENTED IN THIS VERSION
+    }
 }

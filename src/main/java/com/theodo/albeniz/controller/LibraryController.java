@@ -47,6 +47,11 @@ public class LibraryController {
         return ResponseEntity.ok(libraryService.getOne(id));
     }
 
+    @GetMapping("music/author")
+    public Collection<Tune> getMusicFromAuthor(@RequestParam(required = false) String query) {
+        return libraryService.getAllFromAuthor(query);
+    }
+
     @DeleteMapping("music/{id}")
     public void deleteTune(@PathVariable UUID id) throws NotFoundException {
         boolean removed = libraryService.removeTune(id);

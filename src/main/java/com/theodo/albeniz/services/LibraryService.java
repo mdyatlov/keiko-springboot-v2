@@ -19,4 +19,6 @@ public interface LibraryService {
     boolean isExist(UUID id);
 
     boolean modifyTune(Tune tune);
+
+    Collection<Tune> getAllFromAuthor(String author);
 }

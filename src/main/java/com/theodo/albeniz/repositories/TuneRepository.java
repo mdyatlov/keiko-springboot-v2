@@ -12,4 +12,6 @@ import java.util.UUID;
 public interface TuneRepository extends JpaRepository<TuneEntity, UUID> {
     @Query("SELECT tune FROM TuneEntity tune WHERE tune.title LIKE %:query%")
     List<TuneEntity> searchBy(@Param("query") String query, Pageable pageable);
+
+    List<TuneEntity> findByAuthor(String author);
 }
