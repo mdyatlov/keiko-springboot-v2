@@ -1,6 +1,8 @@
 package com.theodo.albeniz.services;
 
+import com.theodo.albeniz.config.ApplicationConfig;
 import com.theodo.albeniz.dto.Tune;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -9,13 +11,17 @@ import java.util.stream.Collectors;
 
 @Service
 @Profile("!memory")
+@RequiredArgsConstructor
 public class InDatabaseLibraryService implements LibraryService {
     private final Map<UUID, Tune> library = new HashMap<>();
+
+    private final ApplicationConfig applicationConfig;
 
     @Override
     public Collection<Tune> getAll(String query) {
         return library.values().stream()
-                .sorted(Comparator.comparing(Tune::getTitle))
+                .sorted(getComparator(applicationConfig.getApi().isAscending()))
+                .limit(applicationConfig.getApi().getMaxCollection())
                 .filter(tune -> query == null || tune.getTitle().contains(query))
                 .collect(Collectors.toList());
     }
@@ -51,5 +57,9 @@ public class InDatabaseLibraryService implements LibraryService {
             return true;
         }
         return false;
+    }
+
+    private Comparator<? super Tune> getComparator(boolean asc) {
+        return asc ? Comparator.comparing(Tune::getTitle) : Comparator.comparing(Tune::getTitle).reversed();
     }
 }

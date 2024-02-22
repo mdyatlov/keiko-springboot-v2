@@ -1,6 +1,7 @@
 package com.theodo.albeniz.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.theodo.albeniz.config.ApplicationConfig;
 import com.theodo.albeniz.dto.Tune;
 import com.theodo.albeniz.services.InDatabaseLibraryService;
 import org.intellij.lang.annotations.Language;
@@ -27,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = LibraryController.class)
 @AutoConfigureMockMvc
 @ActiveProfiles("database")
-@Import(value = {InDatabaseLibraryService.class})
+@Import(value = {InDatabaseLibraryService.class, ApplicationConfig.class})
 class InDatabaseLibraryControllerTest {
 
     @Autowired

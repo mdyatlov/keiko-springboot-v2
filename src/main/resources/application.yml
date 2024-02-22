@@ -21,3 +21,7 @@ server:
     context-path: /albeniz
 
 
+application:
+  api:
+    maxCollection: 11
+    ascending: false
