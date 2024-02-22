@@ -7,12 +7,13 @@ import com.theodo.albeniz.model.TuneEntity;
 import com.theodo.albeniz.repositories.TuneRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 @Service
 @Profile("!memory")
@@ -25,15 +26,17 @@ public class InDatabaseLibraryService implements LibraryService {
 
     @Override
     public Collection<Tune> getAll(String query) {
-        Spliterator<TuneEntity> spliterator = tuneRepository.findAll().spliterator();
-        Stream<TuneEntity> stream = StreamSupport.stream(spliterator, false);
+        Sort.Direction direction = applicationConfig.getApi().isAscending() ? Sort.Direction.ASC : Sort.Direction.DESC;
+        PageRequest pageRequest = PageRequest.of(0, applicationConfig.getApi().getMaxCollection(),
+                Sort.by(direction, "title"));
 
-        return stream
-                .map(tuneMapper::from)
-                .sorted(getComparator(applicationConfig.getApi().isAscending()))
-                .limit(applicationConfig.getApi().getMaxCollection())
-                .filter(tune -> query == null || tune.getTitle().contains(query))
-                .collect(Collectors.toList());
+        if(query != null) {
+            List<TuneEntity> tuneEntities = tuneRepository.searchBy(query, pageRequest);
+            return tuneEntities.stream().map(tuneMapper::from).collect(Collectors.toList());
+        } else {
+            Page<TuneEntity> tuneEntities = tuneRepository.findAll(pageRequest);
+            return tuneEntities.stream().map(tuneMapper::from).collect(Collectors.toList());
+        }
     }
 
     @Override
@@ -69,9 +72,5 @@ public class InDatabaseLibraryService implements LibraryService {
             return true;
         }
         return false;
-    }
-
-    private Comparator<? super Tune> getComparator(boolean asc) {
-        return asc ? Comparator.comparing(Tune::getTitle) : Comparator.comparing(Tune::getTitle).reversed();
     }
 }
