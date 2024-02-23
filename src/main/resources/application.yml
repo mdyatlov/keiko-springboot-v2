@@ -6,6 +6,20 @@ spring:
   application:
     name: albeniz-api
 
+  datasource:
+    url: jdbc:postgresql://localhost:5432/albeniz_db
+    driver-class-name: org.postgresql.Driver
+    username: myDatabaseAdminUser
+    password: aGivenAdminPassword
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate.jdbc.lob.non_contextual_creation: true
+
 # Change Actuator base URI
 management:
   endpoints:
