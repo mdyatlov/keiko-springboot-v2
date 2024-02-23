@@ -1,0 +1,24 @@
+databaseChangeLog:
+- changeSet:
+    id: 1572728814501-1
+    author: gumichel (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              primaryKey: true
+              primaryKeyName: TUNEPK
+            name: ID
+            type: INTEGER
+        - column:
+            name: AUTHOR
+            type: VARCHAR(255)
+        - column:
+            name: RELEASE_DATE
+            type: VARCHAR(255)
+        - column:
+            name: TITLE
+            type: VARCHAR(255)
+        tableName: TUNE
