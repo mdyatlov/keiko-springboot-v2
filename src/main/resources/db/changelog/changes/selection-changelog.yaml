@@ -1,0 +1,52 @@
+databaseChangeLog:
+- changeSet:
+    id: 1573056640468-1
+    author: XXXX (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              primaryKey: true
+            name: USER_ID
+            type: UUID
+        - column:
+            constraints:
+              primaryKey: true
+            name: TUNE_ID
+            type: UUID
+        tableName: USER_SELECTION
+- changeSet:
+    id: 1573056640468-2
+    author: gumichel (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: TUNE_ID
+        constraintName: UK_USER_SELECTION
+        tableName: USER_SELECTION
+- changeSet:
+    id: 1573056640468-3
+    author: YYYY (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: TUNE_ID
+        baseTableName: USER_SELECTION
+        constraintName: FK_SELECTION_TUNE_ID
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: ID
+        referencedTableName: TUNE
+        validate: true
+- changeSet:
+    id: 1573056640468-4
+    author: gumichel (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: USER_ID
+        baseTableName: USER_SELECTION
+        constraintName: FK_SELECTION_USER_ID
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: ID
+        referencedTableName: APP_USER
+        validate: true
