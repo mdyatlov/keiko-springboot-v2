@@ -5,6 +5,7 @@ import com.theodo.albeniz.dto.Tune;
 import com.theodo.albeniz.mappers.TuneMapper;
 import com.theodo.albeniz.model.TuneEntity;
 import com.theodo.albeniz.repositories.TuneRepository;
+import com.theodo.albeniz.services.album.AlbumService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
@@ -12,7 +13,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,6 +27,7 @@ public class InDatabaseLibraryService implements LibraryService {
     private final ApplicationConfig applicationConfig;
     private final TuneRepository tuneRepository;
     private final TuneMapper tuneMapper;
+    private final AlbumService lastFmAlbumService;
 
     @Override
     public Collection<Tune> getAll(String query) {
@@ -47,6 +52,10 @@ public class InDatabaseLibraryService implements LibraryService {
 
     @Override
     public UUID addTune(Tune tune) {
+        String album = lastFmAlbumService.getAlbum(tune.getTitle(), tune.getAuthor());
+        if( album != null){
+            tune.setAlbum(album);
+        }
         TuneEntity save = tuneRepository.save(tuneMapper.from(tune));
         return save.getId();
     }

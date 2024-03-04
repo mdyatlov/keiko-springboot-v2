@@ -1,10 +1,7 @@
 package com.theodo.albeniz.controller;
 
-import com.theodo.albeniz.dto.Tune;
 import com.theodo.albeniz.repositories.UserEntityRepository;
-import com.theodo.albeniz.services.LibraryService;
 import jakarta.servlet.http.Cookie;
-import org.intellij.lang.annotations.Language;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,8 +13,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 
-import java.util.Collection;
-
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -26,13 +21,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-public class UserSelectionControllerIntegrationTest {
+public class ExternalApiAlbumIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private LibraryService libraryService;
 
     @Autowired
     private UserEntityRepository userEntityRepository;
@@ -59,73 +51,35 @@ public class UserSelectionControllerIntegrationTest {
     @Test
     public void testAddRemoveSelection() throws Exception {
         // ARRANGE
-        checkSelection("[]", cookie);
-
-        insertTunesInLibrary(cookie);
-
-        checkSelection("[]", cookie);
 
         // ACT
-        Collection<Tune> allFromAuthor = libraryService.getAllFromAuthor("Claude N.");
-        for (Tune tune : allFromAuthor) {
-            mockMvc.perform(post("/selection/" + tune.getId())
-                    .cookie(cookie)
-                    .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk());
-        }
+        insertTunesInLibrary(cookie);
 
         // ASSERT
-        checkSelection("""
-                    [
-                    {"title": "Nougayork", "author": "Claude N."},
-                    {"title": "Cecile ma fille", "author": "Claude N."}
-                    ]
-                    """, cookie);
+        mockMvc.perform(get("/library/music")
+                        .cookie(cookie)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json(
+                        """
+                                [
+                                    {"title": "Beat It","author":"Michael Jackson", "album":  "Thriller"}
+                                ]
+                                """
+                ));
 
     }
 
     private void insertTunesInLibrary(Cookie cookie) throws Exception {
-        insertOneTuneInLibrary(cookie, """
-                         {
-                            "title" : "Nougayork",
-                            "author" : "Claude N."
-                         }
-                """);
-
-        insertOneTuneInLibrary(cookie, """
-                 {
-                    "title" : "Into the Groove",
-                    "author" : "Madonna"
-                 }
-        """);
-
-        insertOneTuneInLibrary(cookie, """
-                 {
-                    "title" : "Le petit bonhomme en mousse",
-                    "author" : "Patrick S."
-                 }
-        """);
-
-        insertOneTuneInLibrary(cookie, """
-                 {
-                    "title" : "Cecile ma fille",
-                    "author" : "Claude N."
-                 }
-        """);
-
-        insertOneTuneInLibrary(cookie, """
-                 {
-                    "title" : "Believe",
-                    "author" : "Cher"
-                 }
-        """);
-    }
-
-    private void insertOneTuneInLibrary(Cookie cookie, @Language("json") String tuneContent) throws Exception {
         mockMvc.perform(post("/library/music")
                         .cookie(cookie)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(tuneContent))
+                        .content("""
+                                         {
+                                            "title" : "Beat It",
+                                            "author" : "Michael Jackson"
+                                         }
+                                """))
                 .andExpect(status().isCreated());
     }
 
@@ -144,13 +98,5 @@ public class UserSelectionControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(
                         "{'username': 'user2@gmail.com'}"));
-    }
-
-    private void checkSelection(@Language("json") final String expectedJson, Cookie cookie) throws Exception {
-        mockMvc.perform(get("/selection")
-                .cookie(cookie)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().json(expectedJson));
     }
 }

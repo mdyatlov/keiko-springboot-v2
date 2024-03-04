@@ -14,9 +14,9 @@ public class InMemoryLibraryService implements LibraryService {
 
     static {
         // ADD static values (temporary)
-        addStaticTune(new Tune(UUID.fromString("ebc42f50-ea5e-4f4d-bf30-7755d382eb21"), "Thriller", "MJ"));
-        addStaticTune(new Tune(UUID.fromString("f1c236cb-3ee5-47e8-9034-d3ebf85a6b76"), "Prelude and Fugue in C minor", "Bach"));
-        addStaticTune(new Tune(UUID.fromString("e72750f9-76b8-4cdf-8469-45ed9edc5270"), "The Little Foam Man", "Patrick S."));
+        addStaticTune(new Tune(UUID.fromString("ebc42f50-ea5e-4f4d-bf30-7755d382eb21"), "Thriller", "MJ", null));
+        addStaticTune(new Tune(UUID.fromString("f1c236cb-3ee5-47e8-9034-d3ebf85a6b76"), "Prelude and Fugue in C minor", "Bach", null));
+        addStaticTune(new Tune(UUID.fromString("e72750f9-76b8-4cdf-8469-45ed9edc5270"), "The Little Foam Man", "Patrick S.", null));
     }
 
     private static void addStaticTune(final Tune tune) {

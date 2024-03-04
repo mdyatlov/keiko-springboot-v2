@@ -1,0 +1,11 @@
+databaseChangeLog:
+- changeSet:
+    id: 1573147437784-2
+    author: XXXXX
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: ALBUM
+            type: varchar(255)
+        tableName: TUNE

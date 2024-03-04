@@ -23,9 +23,9 @@ class TuneRepositoryTest {
     @Test
      public void testCRUD() {
          assertThat(tuneRepository.count()).isEqualTo(0);
-         TuneEntity save1 = tuneRepository.save(new TuneEntity(null, "b", "c", "d"));
-         TuneEntity save2 =tuneRepository.save(new TuneEntity(null, "e", "f", "g"));
-         TuneEntity save3 =tuneRepository.save(new TuneEntity(null, "h", "i", "j"));
+         TuneEntity save1 = tuneRepository.save(new TuneEntity(null, "b", "c", "d", "B"));
+         TuneEntity save2 =tuneRepository.save(new TuneEntity(null, "e", "f", "g", "B"));
+         TuneEntity save3 =tuneRepository.save(new TuneEntity(null, "h", "i", "j", "B"));
 
          assertThat(save1.getId()).isNotNull();
          assertThat(save2.getId()).isNotNull();
@@ -35,7 +35,7 @@ class TuneRepositoryTest {
          assertThat(tuneRepository.existsById(save2.getId())).isTrue();
          assertThat(tuneRepository.existsById(UUID.randomUUID())).isFalse();
 
-         tuneRepository.save(new TuneEntity(save2.getId(), "E", "F", "G"));
+         tuneRepository.save(new TuneEntity(save2.getId(), "E", "F", "G", "H"));
 
          Optional<TuneEntity> optional = tuneRepository.findById(save2.getId());
          assertThat(optional.isPresent()).isTrue();

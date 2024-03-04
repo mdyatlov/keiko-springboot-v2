@@ -26,4 +26,7 @@ public class TuneEntity {
 
     @Column(name = "RELEASE_DATE")
     private String releaseDate;
+
+    @Column(name = "ALBUM")
+    private String album;
 }
