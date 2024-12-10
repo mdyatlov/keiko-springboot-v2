@@ -2,6 +2,10 @@ package com.theodo.albeniz.services;
 
 import com.theodo.albeniz.config.ApplicationConfig;
 import com.theodo.albeniz.dto.Tune;
+import com.theodo.albeniz.mappers.TuneMapper;
+import com.theodo.albeniz.model.TuneEntity;
+import com.theodo.albeniz.repositories.TuneRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -13,13 +17,18 @@ import java.util.stream.Collectors;
 @Profile("!memory")
 @RequiredArgsConstructor
 public class InDatabaseLibraryService implements LibraryService {
-    private final Map<UUID, Tune> library = new HashMap<>();
-
     private final ApplicationConfig applicationConfig;
+
+    private final TuneRepository tuneRepository;
+
+    private final TuneMapper tuneMapper;
 
     @Override
     public Collection<Tune> getAll(String query) {
-        return library.values().stream()
+        List<TuneEntity> tuneEntities = new ArrayList<>();
+        tuneRepository.findAll().forEach(tuneEntities::add);
+        return tuneEntities.stream()
+                .map(tuneMapper::from)
                 .sorted(getComparator(applicationConfig.getApi().isAscending()))
                 .limit(applicationConfig.getApi().getMaxCollection())
                 .filter(tune -> query == null || tune.getTitle().contains(query))
@@ -28,35 +37,41 @@ public class InDatabaseLibraryService implements LibraryService {
 
     @Override
     public Tune getOne(UUID id) {
-        return library.get(id);
-    }
-
-    @Override
-    public UUID addTune(Tune tune) {
-        UUID uuid = UUID.randomUUID();
-        tune.setId(uuid);
-        library.put(tune.getId(), tune);
-        return uuid;
-    }
-
-    @Override
-    public boolean removeTune(UUID id) {
-        Tune removed = library.remove(id);
-        return removed != null;
+        Optional<TuneEntity> optionalTuneEntity = tuneRepository.findById(id);
+        return optionalTuneEntity.map(tuneMapper::from).orElse(null);
     }
 
     @Override
     public boolean isExist(UUID id) {
-        return library.containsKey(id);
+        return tuneRepository.existsById(id);
+    }
+
+    @Override
+    public UUID addTune(Tune tune) {
+        TuneEntity tuneEntity = tuneMapper.from(tune);
+        tuneEntity = tuneRepository.save(tuneEntity);
+        return tuneEntity.getId();
     }
 
     @Override
     public boolean modifyTune(Tune tune) {
-        if(isExist(tune.getId())){
-            library.put(tune.getId(), tune);
-            return true;
+        if (!isExist(tune.getId())) {
+            return false;
         }
-        return false;
+
+        TuneEntity tuneEntity = tuneMapper.from(tune);
+        tuneRepository.save(tuneEntity);
+        return true;
+    }
+
+    @Override
+    public boolean removeTune(UUID id) {
+        if (!isExist(id)) {
+            return false;
+        }
+
+        tuneRepository.deleteById(id);
+        return true;
     }
 
     private Comparator<? super Tune> getComparator(boolean asc) {
