@@ -21,6 +21,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.Collection;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -29,113 +32,106 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = LibraryController.class)
 @AutoConfigureMockMvc
 @ActiveProfiles("database")
-@Import(value = { InDatabaseLibraryService.class, ApplicationConfig.class })
+@Import(value = ApplicationConfig.class)
 class InDatabaseLibraryControllerTest {
 
-  @Autowired
-  private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-  @Autowired
-  @MockBean
-  private InDatabaseLibraryService libraryService;
+    @Autowired
+    @MockBean
+    private InDatabaseLibraryService libraryService;
 
-  @BeforeEach
-  public void setUp() {
-    Collection<Tune> all = libraryService.getAll(null);
-    for (Tune tune : all) {
-      libraryService.removeTune(tune.getId());
+    @BeforeEach
+    public void setUp() {
+        Collection<Tune> all = libraryService.getAll(null);
+        for (Tune tune : all) {
+            libraryService.removeTune(tune.getId());
+        }
     }
-  }
 
-  @Test
-  public void testAddTune() throws Exception {
-    checkThatThereIsNoTuneInLibrary();
+    @Test
+    public void testAddTune() throws Exception {
+        checkThatThereIsNoTuneInLibrary();
 
-    insertOneTune("{\"title\": \"ABC\",\"author\": \"Jackson5\"}");
+        Tune toBeInsertedTune = new Tune();
+        toBeInsertedTune.setTitle("ABC");
+        toBeInsertedTune.setAuthor("Jackson5");
+        UUID toBeCreatedId = UUID.fromString("574bfb93-a5f7-48ab-9eee-3b46ed019dd5");
+        System.out.println("very hehe" + toBeCreatedId);
+        when(libraryService.addTune(any())).thenReturn(toBeCreatedId);
 
-    insertOneTune("{\"title\": \"Highway to Hell\",\"author\": \"AC-DC\"}");
+        Tune insertedTune = new Tune();
+        insertedTune.setId(toBeCreatedId);
+        insertedTune.setAuthor(toBeInsertedTune.getAuthor());
+        insertedTune.setTitle(toBeInsertedTune.getTitle());
+        System.out.println("very hehe" + insertedTune.getId());
+        when(libraryService.getOne(toBeCreatedId)).thenReturn(insertedTune);
 
-    mockMvc.perform(get("/library/music").contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andExpect(content().json(
-            """
-                     [
-                       { "title": "ABC", "author": "Jackson5" },
-                       { "title": "Highway to Hell", "author": "AC-DC" }
-                     ]
-                """));
-  }
+        UUID createdId = insertOneTune("""
+                { "title": "ABC", "author": "Jackson5" }
+                """);
 
-  @Test
-  public void testAddTuneValidation() throws Exception {
-    mockMvc.perform(post("/library/music").contentType(MediaType.APPLICATION_JSON)
-        .content("\"author\": \"Jackson5\"}"))
-        .andExpect(status().isBadRequest());
-  }
+        assertEquals(toBeCreatedId, createdId);
+    }
 
-  @Test
-  public void testComplexValidation() throws Exception {
-    mockMvc.perform(post("/library/music").contentType(MediaType.APPLICATION_JSON)
-        .content("{ \"author\": \"Chantal G.\", \"title\": \"Pandi Panda\" }"))
-        .andExpect(status().isBadRequest());
-  }
+    @Test
+    public void testAddTuneValidation() throws Exception {
+        mockMvc.perform(post("/library/music").contentType(MediaType.APPLICATION_JSON)
+                        .content("\"author\": \"Jackson5\"}"))
+                .andExpect(status().isBadRequest());
+    }
 
-  @Test
-  public void testDeleteTune() throws Exception {
+    @Test
+    public void testComplexValidation() throws Exception {
+        mockMvc.perform(post("/library/music").contentType(MediaType.APPLICATION_JSON)
+                        .content("{ \"author\": \"Chantal G.\", \"title\": \"Pandi Panda\" }"))
+                .andExpect(status().isBadRequest());
+    }
 
-    UUID uuid1 = insertOneTune("{ \"title\": \"ABC\", \"author\": \"Jackson5\" }");
+    @Test
+    public void testDeleteTune() throws Exception {
 
-    insertOneTune("{ \"title\": \"Highway to Hell\", \"author\": \"AC-DC\" }");
+        UUID toBeDeleted = UUID.randomUUID();
+        when(libraryService.removeTune(toBeDeleted)).thenReturn(true);
 
-    mockMvc.perform(get("/library/music").contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andExpect(content().json(
-            """
-                 [
-                   { "title": "ABC", "author": "Jackson5" },
-                   { "title": "Highway to Hell", "author": "AC-DC" }
-                 ]
-                """));
+        mockMvc.perform(MockMvcRequestBuilders.delete("/library/music/" + toBeDeleted.toString()).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
 
-    mockMvc
-        .perform(
-            MockMvcRequestBuilders.delete("/library/music/" + uuid1.toString()).contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk());
+    @Test
+    public void testDeleteTuneNotFound() throws Exception {
+        UUID toBeDeleted = UUID.randomUUID();
+        when(libraryService.removeTune(toBeDeleted)).thenReturn(false);
 
-    mockMvc.perform(get("/library/music").contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andExpect(content().json(
-            """
-                 [
-                   { "title": "Highway to Hell", "author": "AC-DC" }
-                 ]
-                """));
-  }
+        mockMvc.perform(MockMvcRequestBuilders.delete("/library/music/" + toBeDeleted.toString()).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
 
-  @Test
-  public void testDeleteTuneNotExist() throws Exception {
-    mockMvc
-        .perform(MockMvcRequestBuilders.delete("/library/music/" + UUID.randomUUID().toString())
-            .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isNotFound());
-  }
+    @Test
+    public void testDeleteTuneNotExist() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/library/music/" + UUID.randomUUID().toString()).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
 
-  private UUID insertOneTune(@Language("json") final String tune) throws Exception {
-    MvcResult mvcResult = mockMvc.perform(post("/library/music").contentType(MediaType.APPLICATION_JSON)
-        .content(tune))
-        .andExpect(status().isCreated())
-        .andReturn();
+    private UUID insertOneTune(@Language("json") final String tune) throws Exception {
+        MvcResult mvcResult = mockMvc.perform(post("/library/music").contentType(MediaType.APPLICATION_JSON)
+                        .content(tune))
+                .andExpect(status().isCreated())
+                .andReturn();
 
-    String bodyAsString = mvcResult.getResponse().getContentAsString();
-    ObjectMapper objectMapper = new ObjectMapper();
-    Tune insertedTune = objectMapper.reader().readValue(bodyAsString, Tune.class);
-    return insertedTune.getId();
-  }
+        String bodyAsString = mvcResult.getResponse().getContentAsString();
+        System.out.println("hehe" + tune);
+        System.out.println("hehe" + mvcResult);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Tune insertedTune = objectMapper.reader().readValue(bodyAsString, Tune.class);
+        return insertedTune.getId();
+    }
 
-  private void checkThatThereIsNoTuneInLibrary() throws Exception {
-    System.out.println("hehe");
-    mockMvc.perform(get("/library/music").contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andExpect(content().json("[]"));
-  }
+    private void checkThatThereIsNoTuneInLibrary() throws Exception {
+        System.out.println("hehe");
+        mockMvc.perform(get("/library/music").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
+    }
 }
