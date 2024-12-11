@@ -58,8 +58,8 @@ public class LibraryController {
     @PostMapping("music")
     @ResponseStatus(HttpStatus.CREATED) // A third way to return an HTTP StatusCode
     public Tune addTune(@Valid  @RequestBody Tune tune) {
-        libraryService.addTune(tune);
-        return libraryService.getOne(tune.getId());
+        UUID id = libraryService.addTune(tune);
+        return libraryService.getOne(id);
     }
 
     @PutMapping("music")
