@@ -59,14 +59,12 @@ class InDatabaseLibraryControllerTest {
     toBeInsertedTune.setTitle("ABC");
     toBeInsertedTune.setAuthor("Jackson5");
     UUID toBeCreatedId = UUID.fromString("574bfb93-a5f7-48ab-9eee-3b46ed019dd5");
-    System.out.println("very hehe" + toBeCreatedId);
     when(libraryService.addTune(any())).thenReturn(toBeCreatedId);
 
     Tune insertedTune = new Tune();
     insertedTune.setId(toBeCreatedId);
     insertedTune.setAuthor(toBeInsertedTune.getAuthor());
     insertedTune.setTitle(toBeInsertedTune.getTitle());
-    System.out.println("very hehe" + insertedTune.getId());
     when(libraryService.getOne(toBeCreatedId)).thenReturn(insertedTune);
 
     UUID createdId = insertOneTune("""
@@ -144,15 +142,12 @@ class InDatabaseLibraryControllerTest {
         .andReturn();
 
     String bodyAsString = mvcResult.getResponse().getContentAsString();
-    System.out.println("hehe" + tune);
-    System.out.println("hehe" + mvcResult);
     ObjectMapper objectMapper = new ObjectMapper();
     Tune insertedTune = objectMapper.reader().readValue(bodyAsString, Tune.class);
     return insertedTune.getId();
   }
 
   private void checkThatThereIsNoTuneInLibrary() throws Exception {
-    System.out.println("hehe");
     mockMvc.perform(get("/library/music").contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(content().json("[]"));
