@@ -41,4 +41,31 @@ class TuneRepositoryTest {
         assertThat(tuneRepository.count()).isEqualTo(2);
         assertThat(tuneRepository.existsById(save2.getId())).isFalse();
     }
+
+    @Test
+    public void testSearchBy() {
+        tuneRepository.save(new TuneEntity(null, "a", "b", "c"));
+        tuneRepository.save(new TuneEntity(null, "d", "e", "f"));
+        tuneRepository.save(new TuneEntity(null, "g", "h", "i"));
+
+        assertThat(tuneRepository.searchBy("a", null)).hasSize(1);
+        assertThat(tuneRepository.searchBy("b", null)).isEmpty();
+        assertThat(tuneRepository.searchBy("d", null)).hasSize(1);
+        assertThat(tuneRepository.searchBy("e", null)).isEmpty();
+        assertThat(tuneRepository.searchBy("g", null)).hasSize(1);
+        assertThat(tuneRepository.searchBy("h", null)).isEmpty();
+        assertThat(tuneRepository.searchBy("z", null)).isEmpty();
+    }
+
+    @Test
+    public void testFindByAuthor() {
+        tuneRepository.save(new TuneEntity(null, "a", "b", "c"));
+        tuneRepository.save(new TuneEntity(null, "d", "e", "f"));
+        tuneRepository.save(new TuneEntity(null, "g", "h", "i"));
+
+        assertThat(tuneRepository.findByAuthor("b")).hasSize(1);
+        assertThat(tuneRepository.findByAuthor("e")).hasSize(1);
+        assertThat(tuneRepository.findByAuthor("h")).hasSize(1);
+        assertThat(tuneRepository.findByAuthor("z")).isEmpty();
+    }
 }
