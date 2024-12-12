@@ -68,4 +68,9 @@ public class LibraryController {
         libraryService.modifyTune(tune);
         return libraryService.getOne(tune.getId());
     }
+
+    @GetMapping("music/author/{author}")
+    public Collection<Tune> getMusicByAuthor(@PathVariable String author){
+        return libraryService.getAllByAuthor(author);
+    }
 }
