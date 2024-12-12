@@ -54,6 +54,7 @@ class TuneRepositoryTest {
         assertThat(tuneRepository.searchBy("ZZZ", null)).isEmpty();
     }
 
+    @Sql(scripts = "classpath:/fixtures/dummy_tunes.sql")
     @Test
     public void testFindByAuthor() {
         assertThat(tuneRepository.findByAuthor("1111")).hasSize(2);
