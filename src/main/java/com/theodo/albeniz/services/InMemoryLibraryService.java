@@ -33,6 +33,13 @@ public class InMemoryLibraryService implements LibraryService {
     }
 
     @Override
+    public Collection<Tune> getAllByAuthor(String author) {
+        return LIBRARY.values().stream()
+                .filter(tune -> tune.getAuthor().equals(author))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Tune getOne(UUID id){
         return LIBRARY.get(id);
     }

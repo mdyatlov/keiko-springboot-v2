@@ -43,6 +43,7 @@ class InDatabaseLibraryServiceTest {
         assertEquals("World Singers", libraryService.getOne(uuid1).getAuthor());
         assertEquals("World Singers !!!", libraryService.getOne(uuid2).getAuthor());
         assertEquals("World Singers !!!!!", libraryService.getOne(uuid3).getAuthor());
+        assertEquals(1, libraryService.getAllByAuthor("World Singers").size());
         assertNull(libraryService.getOne(UUID.randomUUID()));
     }
 

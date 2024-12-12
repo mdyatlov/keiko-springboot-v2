@@ -46,6 +46,14 @@ public class InDatabaseLibraryService implements LibraryService {
     }
 
     @Override
+    public Collection <Tune> getAllByAuthor(String author) {
+        List<TuneEntity> tuneEntities = tuneRepository.findByAuthor(author);
+        return tuneEntities.stream()
+                .map(tuneMapper::from)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Tune getOne(UUID id) {
         Optional<TuneEntity> optionalTuneEntity = tuneRepository.findById(id);
         return optionalTuneEntity.map(tuneMapper::from).orElse(null);

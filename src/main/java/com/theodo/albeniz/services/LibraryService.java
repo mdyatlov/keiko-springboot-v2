@@ -10,6 +10,8 @@ import java.util.UUID;
 public interface LibraryService {
     Collection<Tune> getAll(String query);
 
+    Collection<Tune> getAllByAuthor(String author);
+
     Tune getOne(UUID id);
 
     UUID addTune(Tune tune);

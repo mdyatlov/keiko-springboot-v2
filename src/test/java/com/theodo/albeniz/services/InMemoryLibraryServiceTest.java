@@ -38,4 +38,10 @@ class InMemoryLibraryServiceTest {
         Tune tune = libraryService.getOne(UUID.randomUUID());
         assertNull(tune);
     }
+
+    @Test
+    public void testGetAllByAuthor(){
+        Collection<Tune> all = libraryService.getAllByAuthor("MJ");
+        assertEquals(1, all.size());
+    }
 }
