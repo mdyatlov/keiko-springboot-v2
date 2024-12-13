@@ -1,0 +1,20 @@
+databaseChangeLog:
+- changeSet:
+    id: 1572902919603-1
+    author: YYYYY
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              primaryKey: true
+              primaryKeyName: APP_USERPK
+            name: ID
+            type: UUID
+        - column:
+            name: PASSWORD
+            type: VARCHAR(255)
+        - column:
+            name: USER_NAME
+            type: VARCHAR(255)
+        tableName: APP_USER
