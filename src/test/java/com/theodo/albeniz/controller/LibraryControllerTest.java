@@ -1,5 +1,6 @@
 package com.theodo.albeniz.controller;
 
+import com.theodo.albeniz.config.WebSecurityConfiguration;
 import com.theodo.albeniz.services.InMemoryLibraryService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = LibraryController.class)
 @AutoConfigureMockMvc
 @ActiveProfiles("memory")
-@Import(value = {InMemoryLibraryService.class})
+@Import(value = {InMemoryLibraryService.class, WebSecurityConfiguration.class})
 class LibraryControllerTest {
 
     @Autowired
