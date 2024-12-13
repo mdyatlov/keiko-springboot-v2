@@ -1,4 +1,4 @@
-package com.theodo.albeniz.database.entities;
+package com.theodo.albeniz.model;
 
 import java.util.Collection;
 import java.util.UUID;
