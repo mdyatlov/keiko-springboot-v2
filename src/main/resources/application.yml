@@ -20,6 +20,8 @@ spring:
   liquibase:
     user: myDatabaseAdminUser
     password: aGivenAdminPassword
+  session:
+    store-type: none
 
 # Change Actuator base URI
 management:

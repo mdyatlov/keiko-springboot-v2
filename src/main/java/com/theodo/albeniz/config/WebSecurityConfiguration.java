@@ -50,7 +50,12 @@ public class WebSecurityConfiguration {
             .permitAll()
             .anyRequest()
             .authenticated())
-        .userDetailsService(new UserDetailsServiceImpl(userEntityRepository));
+        .userDetailsService(new UserDetailsServiceImpl(userEntityRepository))
+        .formLogin(conf -> conf
+            .usernameParameter("username")
+            .passwordParameter("password")
+            .permitAll())
+        .logout(conf -> conf.permitAll(false));
     return http.build();
   }
 
