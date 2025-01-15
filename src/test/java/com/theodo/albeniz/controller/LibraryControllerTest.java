@@ -29,69 +29,69 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(value = { InMemoryLibraryService.class, WebSecurityConfiguration.class })
 class LibraryControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+        @Autowired
+        private MockMvc mockMvc;
 
-    @MockBean
-    private UserEntityRepository userEntityRepository;
+        @MockBean
+        private UserEntityRepository userEntityRepository;
 
-    @Test
-    @WithMockUser(username = "joe", password = "Th@t'sAGreatPassword!!!")
-    public void testGetLibraryRoute() throws Exception {
-        mockMvc.perform(
-                get("/library/music")
-                        .with(httpBasic("joe", "Th@t'sAGreatPassword!!!"))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().json(
-                        """
-                                [
-                                    {'title':'Thriller','author':'MJ'},
-                                    {'title':'Prelude and Fugue in C minor','author':'Bach'},
-                                    {'title':'The Little Foam Man','author':'Patrick S.'}
-                                ]
-                                """));
-    }
+        @Test
+        @WithMockUser(username = "joe", password = "Th@t'sAGreatPassword!!!")
+        void testGetLibraryRoute() throws Exception {
+                mockMvc.perform(
+                                get("/library/music")
+                                                .with(httpBasic("joe", "Th@t'sAGreatPassword!!!"))
+                                                .contentType(MediaType.APPLICATION_JSON))
+                                .andExpect(status().isOk())
+                                .andExpect(content().json(
+                                                """
+                                                                [
+                                                                    {'title':'Thriller','author':'MJ'},
+                                                                    {'title':'Prelude and Fugue in C minor','author':'Bach'},
+                                                                    {'title':'The Little Foam Man','author':'Patrick S.'}
+                                                                ]
+                                                                """));
+        }
 
-    @Test
-    @WithMockUser(username = "joe", password = "Th@t'sAGreatPassword!!!")
-    public void testGetOneTune() throws Exception {
-        mockMvc.perform(
-                get("/library/music/f1c236cb-3ee5-47e8-9034-d3ebf85a6b76")
-                        .with(httpBasic("joe", "Th@t'sAGreatPassword!!!"))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().json(
-                        """
-                                    {'title':'Prelude and Fugue in C minor','author':'Bach'}
-                                """));
-    }
+        @Test
+        @WithMockUser(username = "joe", password = "Th@t'sAGreatPassword!!!")
+        void testGetOneTune() throws Exception {
+                mockMvc.perform(
+                                get("/library/music/f1c236cb-3ee5-47e8-9034-d3ebf85a6b76")
+                                                .with(httpBasic("joe", "Th@t'sAGreatPassword!!!"))
+                                                .contentType(MediaType.APPLICATION_JSON))
+                                .andExpect(status().isOk())
+                                .andExpect(content().json(
+                                                """
+                                                                    {'title':'Prelude and Fugue in C minor','author':'Bach'}
+                                                                """));
+        }
 
-    @Test
-    @WithMockUser(username = "joe", password = "Th@t'sAGreatPassword!!!")
-    public void testGetOneTuneNotExisting() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(
-                get("/library/music/" + UUID.randomUUID())
-                        .with(httpBasic("joe", "Th@t'sAGreatPassword!!!"))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound()).andReturn();
-        String contentAsString = mvcResult.getResponse().getContentAsString();
-        assertEquals("", contentAsString);
-    }
+        @Test
+        @WithMockUser(username = "joe", password = "Th@t'sAGreatPassword!!!")
+        void testGetOneTuneNotExisting() throws Exception {
+                MvcResult mvcResult = mockMvc.perform(
+                                get("/library/music/" + UUID.randomUUID())
+                                                .with(httpBasic("joe", "Th@t'sAGreatPassword!!!"))
+                                                .contentType(MediaType.APPLICATION_JSON))
+                                .andExpect(status().isNotFound()).andReturn();
+                String contentAsString = mvcResult.getResponse().getContentAsString();
+                assertEquals("", contentAsString);
+        }
 
-    @Test
-    @WithMockUser(username = "joe", password = "Th@t'sAGreatPassword!!!")
-    public void findMusic() throws Exception {
-        mockMvc.perform(
-                get("/library/music?query=iller")
-                        .with(httpBasic("joe", "Th@t'sAGreatPassword!!!"))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().json(
-                        """
-                                [
-                                    {'title':'Thriller','author':'MJ'}
-                                ]
-                                """));
-    }
+        @Test
+        @WithMockUser(username = "joe", password = "Th@t'sAGreatPassword!!!")
+        void findMusic() throws Exception {
+                mockMvc.perform(
+                                get("/library/music?query=iller")
+                                                .with(httpBasic("joe", "Th@t'sAGreatPassword!!!"))
+                                                .contentType(MediaType.APPLICATION_JSON))
+                                .andExpect(status().isOk())
+                                .andExpect(content().json(
+                                                """
+                                                                [
+                                                                    {'title':'Thriller','author':'MJ'}
+                                                                ]
+                                                                """));
+        }
 }

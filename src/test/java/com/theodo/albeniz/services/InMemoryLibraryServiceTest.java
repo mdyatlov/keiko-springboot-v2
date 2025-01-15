@@ -13,28 +13,31 @@ class InMemoryLibraryServiceTest {
     private final LibraryService libraryService = new InMemoryLibraryService();
 
     @Test
-    public void testGetAllWithoutFilter(){
+    void testGetAllWithoutFilter() {
         Collection<Tune> all = libraryService.getAll(null);
         assertEquals(3, all.size());
     }
+
     @Test
-    public void testGetAllWithMatchingFilter(){
+    void testGetAllWithMatchingFilter() {
         Collection<Tune> all = libraryService.getAll("Thrill");
         assertEquals(1, all.size());
     }
+
     @Test
-    public void testGetAllWithNoMatchFilter(){
+    void testGetAllWithNoMatchFilter() {
         Collection<Tune> all = libraryService.getAll("ACDC");
         assertEquals(0, all.size());
     }
 
     @Test
-    public void testGetOne(){
+    void testGetOne() {
         Tune tune = libraryService.getOne(UUID.fromString("ebc42f50-ea5e-4f4d-bf30-7755d382eb21"));
         assertEquals("Thriller", tune.getTitle());
     }
+
     @Test
-    public void testGetOneNoMatch(){
+    void testGetOneNoMatch() {
         Tune tune = libraryService.getOne(UUID.randomUUID());
         assertNull(tune);
     }

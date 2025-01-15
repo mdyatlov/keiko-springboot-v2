@@ -45,7 +45,7 @@ class InDatabaseLibraryControllerTest {
 
     @Test
     @WithMockUser(username = "joe", password = "Th@t'sAGreatPassword!!!")
-    public void testAddTune() throws Exception {
+    void testAddTune() throws Exception {
 
         Tune toBeInsertedTune = new Tune();
         toBeInsertedTune.setTitle("ABC");
@@ -71,7 +71,7 @@ class InDatabaseLibraryControllerTest {
 
     @Test
     @WithMockUser(username = "joe", password = "Th@t'sAGreatPassword!!!")
-    public void testAddTuneValidation() throws Exception {
+    void testAddTuneValidation() throws Exception {
         mockMvc.perform(
                 post("/library/music")
                         .with(httpBasic("joe", "Th@t'sAGreatPassword!!!"))
@@ -86,7 +86,7 @@ class InDatabaseLibraryControllerTest {
 
     @Test
     @WithMockUser(username = "joe", password = "Th@t'sAGreatPassword!!!")
-    public void testComplexValidation() throws Exception {
+    void testComplexValidation() throws Exception {
         mockMvc.perform(
                 post("/library/music")
                         .with(httpBasic("joe", "Th@t'sAGreatPassword!!!"))
@@ -102,7 +102,7 @@ class InDatabaseLibraryControllerTest {
 
     @Test
     @WithMockUser(username = "joe", password = "Th@t'sAGreatPassword!!!")
-    public void testDeleteTune() throws Exception {
+    void testDeleteTune() throws Exception {
 
         UUID toBeDeleted = UUID.randomUUID();
         when(libraryService.removeTune(toBeDeleted)).thenReturn(true);
@@ -114,7 +114,7 @@ class InDatabaseLibraryControllerTest {
 
     @Test
     @WithMockUser(username = "joe", password = "Th@t'sAGreatPassword!!!")
-    public void testDeleteTuneNotFound() throws Exception {
+    void testDeleteTuneNotFound() throws Exception {
         UUID toBeDeleted = UUID.randomUUID();
         when(libraryService.removeTune(toBeDeleted)).thenReturn(false);
 
@@ -125,7 +125,7 @@ class InDatabaseLibraryControllerTest {
 
     @Test
     @WithMockUser(username = "joe", password = "Th@t'sAGreatPassword!!!")
-    public void testDeleteTuneNotExist() throws Exception {
+    void testDeleteTuneNotExist() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/library/music/" + UUID.randomUUID().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());

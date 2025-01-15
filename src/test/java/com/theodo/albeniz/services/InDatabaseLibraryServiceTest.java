@@ -29,8 +29,9 @@ class InDatabaseLibraryServiceTest {
     private final TuneMapper tuneMapper = new TuneMapperImpl();
 
     @Test
-    public void testAllMethods() {
-        InDatabaseLibraryService libraryService = new InDatabaseLibraryService(createMockConfiguration(), tuneRepository, tuneMapper);
+    void testAllMethods() {
+        InDatabaseLibraryService libraryService = new InDatabaseLibraryService(createMockConfiguration(),
+                tuneRepository, tuneMapper);
         assertEquals(0, libraryService.getAll(null).size());
 
         UUID uuid1 = libraryService.addTune(new Tune(null, "Hello", "World Singers"));
@@ -45,8 +46,9 @@ class InDatabaseLibraryServiceTest {
     }
 
     @Test
-    public void testRemove() {
-        InDatabaseLibraryService libraryService = new InDatabaseLibraryService(createMockConfiguration(), tuneRepository, tuneMapper);
+    void testRemove() {
+        InDatabaseLibraryService libraryService = new InDatabaseLibraryService(createMockConfiguration(),
+                tuneRepository, tuneMapper);
         assertEquals(0, libraryService.getAll(null).size());
 
         UUID uuid1 = libraryService.addTune(new Tune(null, "Hello", "World Singers"));
@@ -69,7 +71,7 @@ class InDatabaseLibraryServiceTest {
     }
 
     @Test
-    public void testLimitSize() {
+    void testLimitSize() {
         ApplicationConfig applicationConfig = new ApplicationConfig();
         applicationConfig.getApi().setMaxCollection(4);
         InDatabaseLibraryService dataLibraryService = createLibraryWithManyTunes(applicationConfig);
@@ -79,7 +81,7 @@ class InDatabaseLibraryServiceTest {
     }
 
     @Test
-    public void testOrder() {
+    void testOrder() {
         ApplicationConfig applicationConfig = new ApplicationConfig();
         applicationConfig.getApi().setMaxCollection(4);
         applicationConfig.getApi().setAscending(false);
@@ -99,8 +101,9 @@ class InDatabaseLibraryServiceTest {
     }
 
     @Test
-    public void testGetByAuthor() {
-        InDatabaseLibraryService libraryService = new InDatabaseLibraryService(createMockConfiguration(), tuneRepository, tuneMapper);
+    void testGetByAuthor() {
+        InDatabaseLibraryService libraryService = new InDatabaseLibraryService(createMockConfiguration(),
+                tuneRepository, tuneMapper);
         assertEquals(0, libraryService.getAll(null).size());
 
         libraryService.addTune(new Tune(null, "Hello", "World Singers"));
@@ -112,7 +115,8 @@ class InDatabaseLibraryServiceTest {
     }
 
     private InDatabaseLibraryService createLibraryWithManyTunes(ApplicationConfig applicationConfig) {
-        InDatabaseLibraryService dataLibraryService = new InDatabaseLibraryService(applicationConfig, tuneRepository, tuneMapper);
+        InDatabaseLibraryService dataLibraryService = new InDatabaseLibraryService(applicationConfig, tuneRepository,
+                tuneMapper);
         for (int i = 0; i < 100; i++) {
             dataLibraryService.addTune(new Tune(UUID.randomUUID(), "Tune:" + i, "Me"));
         }
